@@ -7,6 +7,10 @@ import os
 import time
 import logging
 from datetime import datetime
+import random
+import smtplib
+from email.mime.text import MIMEText
+from email.header import Header
 
 # 配置日志
 logging.basicConfig(
@@ -23,8 +27,8 @@ QQ_TARGETS = os.environ.get('QQ_TARGETS')  # 目标QQ号，用逗号分隔
 # 检查时间是否需要发送消息（比如只在晚上查寝）
 def should_send_now():
     now = datetime.now()
-    # 例如：晚上10点到11点之间发送查寝消息
-    if 22 <= now.hour < 23:
+    # 晚上22:40发送查寝消息
+    if now.hour == 22 and now.minute == 40:
         return True
     return False
 
@@ -65,6 +69,38 @@ def send_qq_message(target_qq, message):
         logger.error(f"发送过程中出错: {str(e)}")
         return False
 
+# 发送邮件通知
+def send_email_notification(subject, content):
+    # 从环境变量获取邮件配置
+    smtp_server = os.environ.get('SMTP_SERVER', 'smtp.163.com')
+    smtp_port = int(os.environ.get('SMTP_PORT', 25))
+    smtp_user = os.environ.get('SMTP_USER', '')
+    smtp_password = os.environ.get('SMTP_PASSWORD', '')
+    recipient_email = os.environ.get('RECIPIENT_EMAIL', '13708435621@163.com')
+    
+    if not smtp_user or not smtp_password:
+        logger.error("未设置SMTP_USER或SMTP_PASSWORD环境变量，无法发送邮件")
+        return False
+    
+    try:
+        msg = MIMEText(content, 'plain', 'utf-8')
+        msg['Subject'] = Header(subject, 'utf-8')
+        msg['From'] = smtp_user
+        msg['To'] = recipient_email
+        
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.ehlo()
+        server.starttls()
+        server.login(smtp_user, smtp_password)
+        server.sendmail(smtp_user, [recipient_email], msg.as_string())
+        server.quit()
+        
+        logger.info(f"成功发送邮件通知到 {recipient_email}")
+        return True
+    except Exception as e:
+        logger.error(f"发送邮件失败: {str(e)}")
+        return False
+
 def main():
     if not should_send_now():
         logger.info("当前时间不需要发送查寝消息")
@@ -74,17 +110,36 @@ def main():
         logger.error("未设置QQ_TARGETS环境变量")
         return
     
+    # 生成三位随机数字
+    random_code = f"{random.randint(100, 999)}"
+    
     # 查寝消息内容
-    message = "查寝提醒：请回复「在」确认你已在宿舍。10分钟内未回复将被记为缺勤。"
+    message = f"查寝提醒：代码{random_code}，若请假请忽略此条消息，谢谢。"
+    
+    # 记录成功发送的目标
+    success_targets = []
     
     # 给每个目标QQ发送消息
     targets = QQ_TARGETS.split(',')
     for target in targets:
         target = target.strip()
         if target:
-            send_qq_message(target, message)
+            if send_qq_message(target, message):
+                success_targets.append(target)
             # 添加延迟避免频率限制
             time.sleep(1)
+    
+    # 如果有消息发送成功，发送邮件通知
+    if success_targets:
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        email_subject = f"查寝消息发送成功通知 - {now}"
+        email_content = f"""
+查寝系统消息通知:
+发送时间: {now}
+验证码: {random_code}
+成功发送目标: {', '.join(success_targets)}
+        """
+        send_email_notification(email_subject, email_content)
 
 if __name__ == "__main__":
     main() 

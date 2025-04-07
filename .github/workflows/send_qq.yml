@@ -2,8 +2,8 @@ name: 定时发送QQ查寝消息
 
 on:
   schedule:
-    # 每天晚上10点执行（UTC+8对应的是UTC+0的14:00）
-    - cron: '0 14 * * *'
+    # 每天晚上22:40执行（UTC+8对应的是UTC+0的14:40）
+    - cron: '40 14 * * *'
   workflow_dispatch:  # 允许手动触发
 
 jobs:
@@ -28,4 +28,9 @@ jobs:
           QQ_API_URL: ${{ secrets.QQ_API_URL }}
           QQ_API_TOKEN: ${{ secrets.QQ_API_TOKEN }}
           QQ_TARGETS: ${{ secrets.QQ_TARGETS }}
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          RECIPIENT_EMAIL: '13708435621@163.com'
         run: python scripts/send_message.py 
