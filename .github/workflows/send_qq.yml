@@ -28,4 +28,4 @@ jobs:
           QQ_API_URL: ${{ secrets.QQ_API_URL }}
           QQ_API_TOKEN: ${{ secrets.QQ_API_TOKEN }}
           QQ_TARGETS: ${{ secrets.QQ_TARGETS }}
-        run: python auto-qq-sender/scripts/send_message.py 
+        run: python scripts/send_message.py 
