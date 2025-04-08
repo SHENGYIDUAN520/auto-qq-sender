@@ -24,11 +24,15 @@ API_URL = os.environ.get('QQ_API_URL')  # go-cqhttp的API地址
 API_TOKEN = os.environ.get('QQ_API_TOKEN')  # API访问令牌
 QQ_TARGETS = os.environ.get('QQ_TARGETS')  # 目标QQ号，用逗号分隔
 
-# 检查时间是否需要发送消息（比如只在晚上查寝）
+# 检查时间是否需要发送消息
 def should_send_now():
+    # 检查是否是手动触发的工作流
+    if os.environ.get('WORKFLOW_TRIGGER') == 'manual':
+        return True
+        
     now = datetime.now()
-    # 早上9点整发送查寝消息
-    if now.hour == 9 and now.minute == 0:
+    # 晚上22:40发送查寝消息
+    if now.hour == 22 and now.minute == 40:
         return True
     return False
 
