@@ -27,8 +27,8 @@ QQ_TARGETS = os.environ.get('QQ_TARGETS')  # 目标QQ号，用逗号分隔
 # 检查时间是否需要发送消息（比如只在晚上查寝）
 def should_send_now():
     now = datetime.now()
-    # 晚上22:40发送查寝消息
-    if now.hour == 22 and now.minute == 40:
+    # 早上9点整发送查寝消息
+    if now.hour == 9 and now.minute == 0:
         return True
     return False
 
