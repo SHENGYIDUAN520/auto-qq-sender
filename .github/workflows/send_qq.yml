@@ -23,10 +23,71 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       
+      - name: 下载最新版go-cqhttp
+        run: |
+          mkdir -p go-cqhttp
+          cd go-cqhttp
+          curl -L -o go-cqhttp.tar.gz https://github.com/Mrs4s/go-cqhttp/releases/download/v1.2.0/go-cqhttp_linux_amd64.tar.gz
+          tar -xzf go-cqhttp.tar.gz
+          chmod +x go-cqhttp
+          
+      - name: 配置go-cqhttp
+        run: |
+          cat > go-cqhttp/config.yml << EOF
+          account:
+            uin: 2258868621 # QQ账号
+            password: '' # 密码为空使用扫码登录
+            encrypt: false
+            status: 0
+            relogin:
+              delay: 3
+              interval: 3
+              max-times: 0
+            use-sso-address: true
+            allow-temp-session: false
+          
+            version:
+              protocol: 6 # 8.9.70 安卓版QQ
+              android_id: "1234567890abcdef" # 自定义安卓ID
+              vendor_name: "OnePlus" # 设备品牌
+              vendor_os_name: "android" # 设备系统名称
+              device_brand: "OnePlus" # 设备品牌
+              device_model: "ACE" # 设备型号
+              os_version: "12" # 系统版本号
+              app_id: "com.tencent.mobileqq" # 应用包名
+          
+          servers:
+            - http:
+                host: 0.0.0.0
+                port: 5700
+                timeout: 5
+                middlewares:
+                  access-token: ''
+                cors:
+                  enable: true
+                  origin: "*"
+          EOF
+      
+      - name: 启动go-cqhttp并等待扫码登录
+        run: |
+          cd go-cqhttp
+          echo "启动go-cqhttp并等待扫码..."
+          ./go-cqhttp -faststart &
+          
+          # 等待10秒让go-cqhttp启动
+          sleep 10
+          
+          # 检查能否访问HTTP API
+          curl -s http://127.0.0.1:5700/get_version_info || echo "HTTP API未启动或无法访问"
+          
+          # 因为GitHub Actions无法扫描二维码，我们使用token文件方式
+          # 这里需要提前上传device.json和session.token到仓库
+          echo "请确保已上传token文件到仓库中"
+      
       - name: 运行发送脚本
+        run: python scripts/send_message.py 
         env:
-          QQ_API_URL: ${{ secrets.QQ_API_URL }}
-          QQ_API_TOKEN: ${{ secrets.QQ_API_TOKEN }}
+          QQ_API_URL: "http://127.0.0.1:5700"
           QQ_TARGETS: ${{ secrets.QQ_TARGETS }}
           SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
@@ -34,4 +95,3 @@ jobs:
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           RECIPIENT_EMAIL: '13708435621@163.com'
           WORKFLOW_TRIGGER: ${{ github.event_name == 'workflow_dispatch' && 'manual' || 'schedule' }}
-        run: python scripts/send_message.py 

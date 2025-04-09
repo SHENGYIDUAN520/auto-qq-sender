@@ -1,0 +1,49 @@
+[2025-04-08 09:55:00] [WARNING]: 账号密码未配置, 将使用二维码登录. 
+[2025-04-08 09:55:00] [WARNING]: 将在 5秒 后继续. 
+[2025-04-08 09:56:39] [WARNING]: 虚拟设备信息不存在, 将自动生成随机设备. 
+[2025-04-08 09:56:39] [WARNING]: no usable sign server 
+[2025-04-08 09:56:39] [WARNING]: 警告: 未配置签名服务器或签名服务器不可用, 这可能会导致登录 45 错误码或发送消息被风控 
+[2025-04-08 09:56:46] [WARNING]: 登录失败: 登录失败，请前往QQ官网im.qq.com下载最新版QQ后重试，或通过问题反馈与我们联系。 Code: 45 
+[2025-04-08 09:56:46] [WARNING]: 你的账号被限制登录, 请配置 SignServer 后重试 
+[2025-04-08 09:58:27] [WARNING]: 签名服务器 http://qsign.lulufind.com:8080/sign 可能不可用，请求出现错误：Get "http://qsign.lulufind.com:8080/sign": dial tcp: lookup qsign.lulufind.com: no such host 
+[2025-04-08 09:58:27] [WARNING]: 签名服务器 http://qsign.qtl.wiki/sign 可能不可用，请求出现错误：Get "http://qsign.qtl.wiki/sign": dial tcp: lookup qsign.qtl.wiki: no such host 
+[2025-04-08 09:58:27] [WARNING]: no usable sign server 
+[2025-04-08 09:58:27] [WARNING]: 警告: 未配置签名服务器或签名服务器不可用, 这可能会导致登录 45 错误码或发送消息被风控 
+[2025-04-08 09:58:34] [WARNING]: 登录失败: 登录失败，请前往QQ官网im.qq.com下载最新版QQ后重试，或通过问题反馈与我们联系。 Code: 45 
+[2025-04-08 09:58:34] [WARNING]: 你的账号被限制登录, 请配置 SignServer 后重试 
+[2025-04-08 09:59:49] [WARNING]: 签名服务器 http://43.139.81.58:233/sign?key=114514 可能不可用，请求出现错误：Get "http://43.139.81.58:233/sign?key=114514": context deadline exceeded (Client.Timeout exceeded while awaiting headers) 
+[2025-04-08 09:59:49] [WARNING]: 签名服务器 http://8.130.41.188:801/sign?key=114514 可能不可用，请求出现错误：Get "http://8.130.41.188:801/sign?key=114514": context deadline exceeded (Client.Timeout exceeded while awaiting headers) 
+[2025-04-08 09:59:49] [WARNING]: no usable sign server 
+[2025-04-08 09:59:49] [WARNING]: 警告: 未配置签名服务器或签名服务器不可用, 这可能会导致登录 45 错误码或发送消息被风控 
+[2025-04-08 09:59:56] [WARNING]: 登录失败: 登录失败，请前往QQ官网im.qq.com下载最新版QQ后重试，或通过问题反馈与我们联系。 Code: 45 
+[2025-04-08 09:59:56] [WARNING]: 你的账号被限制登录, 请配置 SignServer 后重试 
+[2025-04-08 10:01:27] [WARNING]: 账号密码未配置, 将使用二维码登录. 
+[2025-04-08 10:01:27] [WARNING]: 将在 5秒 后继续. 
+[2025-04-08 10:01:33] [WARNING]: 签名服务器 http://qsign.rytl.top:8080/sign?key=114514 可能不可用，请求出现错误：Get "http://qsign.rytl.top:8080/sign?key=114514": dial tcp: lookup qsign.rytl.top: no such host 
+[2025-04-08 10:01:33] [WARNING]: 签名服务器 http://qsign.pvpin.tk:702/sign?key=114514 可能不可用，请求出现错误：Get "http://qsign.pvpin.tk:702/sign?key=114514": dial tcp: lookup qsign.pvpin.tk: no such host 
+[2025-04-08 10:01:33] [WARNING]: no usable sign server 
+[2025-04-08 10:01:33] [WARNING]: 警告: 未配置签名服务器或签名服务器不可用, 这可能会导致登录 45 错误码或发送消息被风控 
+[2025-04-08 10:01:38] [WARNING]: 当前协议不支持二维码登录, 请配置账号密码登录. 
+[2025-04-08 10:04:10] [WARNING]: 签名服务器 http://qsign.rytl.top:8080/sign?key=114514 可能不可用，请求出现错误：Get "http://qsign.rytl.top:8080/sign?key=114514": dial tcp: lookup qsign.rytl.top: no such host 
+[2025-04-08 10:04:10] [WARNING]: 签名服务器 http://qsign.pvpin.tk:702/sign?key=114514 可能不可用，请求出现错误：Get "http://qsign.pvpin.tk:702/sign?key=114514": dial tcp: lookup qsign.pvpin.tk: no such host 
+[2025-04-08 10:04:10] [WARNING]: no usable sign server 
+[2025-04-08 10:04:10] [WARNING]: 警告: 未配置签名服务器或签名服务器不可用, 这可能会导致登录 45 错误码或发送消息被风控 
+[2025-04-08 10:04:17] [WARNING]: 登录失败: 登录失败，请前往QQ官网im.qq.com下载最新版QQ后重试，或通过问题反馈与我们联系。 Code: 45 
+[2025-04-08 10:04:17] [WARNING]: 你的账号被限制登录, 请配置 SignServer 后重试 
+[2025-04-08 10:05:39] [WARNING]: 签名服务器版本 <= 1.1.0 ，无法使用刷新 token 等操作，建议使用 1.1.6 版本及以上签名服务器 
+[2025-04-08 10:05:46] [WARNING]: 获取T544 sign时出现错误: encoding/hex: invalid byte: U+0069 'i' (data: failed) 
+[2025-04-08 10:05:47] [WARNING]: 登录失败: 你当前使用的QQ版本过低，请前往QQ官网im.qq.com下载最新版QQ后重试。 Code: 45 
+[2025-04-08 10:05:47] [WARNING]: 你的账号被限制登录, 请配置 SignServer 后重试 
+[2025-04-08 10:08:34] [WARNING]: 签名服务器版本 <= 1.1.0 ，无法使用刷新 token 等操作，建议使用 1.1.6 版本及以上签名服务器 
+[2025-04-08 10:08:34] [WARNING]: 定时刷新 token 已关闭 
+[2025-04-08 10:08:44] [WARNING]: 获取T544 sign时出现错误: Get "http://127.0.0.1:8080/sign?key=114514/custom_energy?data=810_9&salt=000000000010c69db2748093b228612b358a31c49598000a362e302e302e323534360000000900000000": dial tcp 127.0.0.1:8080: connectex: No connection could be made because the target machine actively refused it.. server: http://127.0.0.1:8080/sign?key=114514 
+[2025-04-08 10:08:46] [WARNING]: 获取sso sign时出现错误: Post "http://127.0.0.1:8080/sign?key=114514/sign": dial tcp 127.0.0.1:8080: connectex: No connection could be made because the target machine actively refused it.. server: http://127.0.0.1:8080/sign?key=114514 
+[2025-04-08 10:08:46] [WARNING]: 登录失败: 登录失败，请前往QQ官网im.qq.com下载最新版QQ后重试，或通过问题反馈与我们联系。 Code: 45 
+[2025-04-08 10:08:46] [WARNING]: 你的账号被限制登录, 请配置 SignServer 后重试 
+[2025-04-08 10:11:43] [FATAL]: open cache image db failed: The process cannot access the file because it is being used by another process. 
+[2025-04-08 10:12:14] [WARNING]: 警告: 未配置签名服务器或签名服务器不可用, 这可能会导致登录 45 错误码或发送消息被风控 
+[2025-04-08 10:12:16] [WARNING]: 登录失败: 登录失败，请前往QQ官网im.qq.com下载最新版QQ后重试，或通过问题反馈与我们联系。 Code: 45 
+[2025-04-08 10:12:16] [WARNING]: 你的账号被限制登录, 请配置 SignServer 后重试 
+[2025-04-08 10:13:56] [WARNING]: 警告: 未配置签名服务器或签名服务器不可用, 这可能会导致登录 45 错误码或发送消息被风控 
+[2025-04-08 10:13:58] [WARNING]: 登录失败: 登录失败，请前往QQ官网im.qq.com下载最新版QQ后重试，或通过问题反馈与我们联系。 Code: 45 
+[2025-04-08 10:13:58] [WARNING]: 你的账号被限制登录, 请配置 SignServer 后重试 

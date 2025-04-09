@@ -1,6 +1,80 @@
-# QQ自动查寝消息发送工具
+# 自动发送QQ查寝消息
 
-这个工具可以通过GitHub Actions自动定时发送QQ消息，适合用于宿舍查寝、定时提醒等场景。
+本项目用于自动发送QQ查寝消息，支持定时发送和手动触发。
+
+## 当前状态与问题
+
+目前遇到以下问题：
+
+1. QQ账号登录需要签名服务器，出现"Code 45"错误和"账号被限制登录"提示
+2. 无法通过Docker运行签名服务器
+3. 花生壳内网穿透设置成功，但访问时显示"不支持Web访问方式"
+
+## 解决方案
+
+### 方案1：使用最新版go-cqhttp并配置签名服务器
+
+1. 下载最新版go-cqhttp: https://github.com/Mrs4s/go-cqhttp/releases/latest
+2. 安装Docker并运行签名服务器:
+   ```
+   docker run -d --restart=always --name qsign -p 8080:8080 -e ANDROID_ID=1234567890abcdef -e QQ_VERSION=8.9.70 xzhouqd/qsign:1.1.6
+   ```
+3. 在config.yml中配置签名服务器:
+   ```yaml
+   sign-servers: 
+     - url: 'http://127.0.0.1:8080/sign?key=114514'
+       key: '114514'
+       authorization: '-'
+   ```
+
+### 方案2：使用Mirai框架 (推荐)
+
+我们已创建基于Mirai框架的替代方案，这是一个更稳定的QQ机器人框架。
+
+详细安装步骤：
+- [快速安装指南](docs/setup_guide.md)
+- [详细配置文档](docs/mirai_guide.md)
+
+主要优势：
+- 更稳定的登录机制
+- 更灵活的API
+- 丰富的插件生态
+- 跨平台支持
+
+使用示例：
+```bash
+python scripts/mirai_sender.py --target 目标QQ号 --verify-key 你的验证密钥 --message "查寝提醒：代码123"
+```
+
+### 方案3：使用其他平台API
+
+1. 企业微信: https://work.weixin.qq.com/
+2. 钉钉: https://www.dingtalk.com/
+
+## 脚本使用方法
+
+1. 直接发送消息:
+   ```
+   py scripts/send_message_direct.py --target 目标QQ号 --api-url http://1064ju811jp02.vicp.fun:13701
+   ```
+
+2. 定时发送查寝消息通过GitHub Actions:
+   ```yaml
+   name: 定时发送QQ查寝消息
+   on:
+     schedule:
+       - cron: '40 14 * * *'  # 每天晚上22:40 (UTC+8)
+   ```
+
+## 关于花生壳内网穿透
+
+花生壳内网穿透已经配置:
+- 外网域名: 1064ju811jp02.vicp.fun
+- 外网端口: 13701
+- 内网主机: 192.168.249.19
+- 内网端口: 5700
+
+但访问时显示"不支持Web访问方式"，可能需要其他内网穿透方案，如frp或ngrok。
 
 ## 功能特点
 

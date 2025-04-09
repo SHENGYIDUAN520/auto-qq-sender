@@ -11,6 +11,7 @@ import random
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
+import argparse  # 添加命令行参数支持
 
 # 配置日志
 logging.basicConfig(
@@ -42,6 +43,19 @@ def send_qq_message(target_qq, message):
         logger.error("未设置QQ_API_URL环境变量")
         return False
         
+    # 去除URL末尾的斜杠，如果有的话
+    api_base_url = API_URL.rstrip('/')
+    
+    # 尝试请求API版本信息，检查连接是否正常
+    try:
+        version_url = f"{api_base_url}/get_version_info"
+        logger.info(f"尝试获取API版本信息: {version_url}")
+        version_response = requests.get(version_url, timeout=10)
+        logger.info(f"API版本响应状态码: {version_response.status_code}")
+        logger.info(f"API版本响应内容: {version_response.text[:200]}...")
+    except Exception as e:
+        logger.error(f"获取API版本信息失败: {str(e)}")
+        
     headers = {
         "Content-Type": "application/json"
     }
@@ -49,29 +63,92 @@ def send_qq_message(target_qq, message):
     if API_TOKEN:
         headers["Authorization"] = f"Bearer {API_TOKEN}"
     
-    data = {
+    # 使用不同格式的数据发送尝试
+    
+    # 1. 标准JSON格式
+    json_data = {
         "user_id": int(target_qq),
         "message": message
     }
     
-    try:
-        # 发送私聊消息API
-        response = requests.post(
-            f"{API_URL}/send_private_msg",
-            headers=headers,
-            data=json.dumps(data)
-        )
+    # 2. URL查询参数格式
+    params_data = {
+        "user_id": target_qq,
+        "message": message
+    }
+
+    # 多个可能的API路径
+    api_paths = [
+        "/send_private_msg",
+        "/send_msg",
+    ]
+    
+    # 尝试不同的请求方法
+    for api_path in api_paths:
+        # 尝试POST JSON
+        try:
+            full_url = f"{api_base_url}{api_path}"
+            logger.info(f"尝试使用POST JSON发送消息到 {target_qq}, API地址: {full_url}")
+            
+            response = requests.post(
+                full_url,
+                headers=headers,
+                json=json_data,  # 使用json参数而不是data+json.dumps
+                timeout=10
+            )
+            
+            logger.info(f"API响应状态码: {response.status_code}")
+            logger.info(f"API响应内容: {response.text[:200]}...")
+            
+            # 检查响应
+            if response.status_code == 200:
+                try:
+                    result = response.json()
+                    if (result.get("status") == "ok" or 
+                        result.get("retcode") == 0 or 
+                        result.get("data", {}).get("message_id", None) is not None):
+                        logger.info(f"成功发送消息到 {target_qq}")
+                        return True
+                except:
+                    if "success" in response.text.lower():
+                        logger.info(f"可能成功发送消息到 {target_qq}")
+                        return True
+        except Exception as e:
+            logger.error(f"POST JSON方法失败: {str(e)}")
         
-        result = response.json()
-        if result.get("status") == "ok":
-            logger.info(f"成功发送消息到 {target_qq}")
-            return True
-        else:
-            logger.error(f"发送失败: {result}")
-            return False
-    except Exception as e:
-        logger.error(f"发送过程中出错: {str(e)}")
-        return False
+        # 尝试GET请求带参数
+        try:
+            full_url = f"{api_base_url}{api_path}"
+            logger.info(f"尝试使用GET参数发送消息到 {target_qq}, API地址: {full_url}")
+            
+            response = requests.get(
+                full_url,
+                params=params_data,
+                timeout=10
+            )
+            
+            logger.info(f"API响应状态码: {response.status_code}")
+            logger.info(f"API响应内容: {response.text[:200]}...")
+            
+            # 检查响应
+            if response.status_code == 200:
+                try:
+                    result = response.json()
+                    if (result.get("status") == "ok" or 
+                        result.get("retcode") == 0 or 
+                        result.get("data", {}).get("message_id", None) is not None):
+                        logger.info(f"成功发送消息到 {target_qq}")
+                        return True
+                except:
+                    if "success" in response.text.lower():
+                        logger.info(f"可能成功发送消息到 {target_qq}")
+                        return True
+        except Exception as e:
+            logger.error(f"GET参数方法失败: {str(e)}")
+    
+    # 所有API路径和方法都尝试失败
+    logger.error(f"所有API路径和方法尝试均失败，无法发送消息到 {target_qq}")
+    return False
 
 # 发送邮件通知
 def send_email_notification(subject, content):
@@ -106,7 +183,14 @@ def send_email_notification(subject, content):
         return False
 
 def main():
-    if not should_send_now():
+    # 解析命令行参数
+    parser = argparse.ArgumentParser(description='发送QQ查寝消息')
+    parser.add_argument('--force', action='store_true', help='强制发送消息，忽略时间检查')
+    parser.add_argument('--test', action='store_true', help='测试模式，只发送到第一个目标')
+    args = parser.parse_args()
+    
+    # 检查是否强制发送或满足定时条件
+    if not args.force and not should_send_now():
         logger.info("当前时间不需要发送查寝消息")
         return
     
@@ -123,8 +207,15 @@ def main():
     # 记录成功发送的目标
     success_targets = []
     
-    # 给每个目标QQ发送消息
+    # 获取目标QQ列表
     targets = QQ_TARGETS.split(',')
+    
+    # 如果是测试模式，只发送给第一个目标
+    if args.test and targets:
+        logger.info("测试模式：只发送到第一个目标")
+        targets = [targets[0]]
+    
+    # 给每个目标QQ发送消息
     for target in targets:
         target = target.strip()
         if target:
