@@ -20,6 +20,11 @@ def send_message(target_qq, message, api_url, verify_key):
     """通过Mirai HTTP API发送QQ消息"""
     logger.info(f"尝试向{target_qq}发送消息")
     
+    # TEST MODE - 模拟发送消息
+    if api_url == "TEST":
+        logger.info(f"测试模式：模拟向{target_qq}发送消息: '{message}'")
+        return True
+    
     # 去除URL末尾的斜杠，如果有的话
     api_url = api_url.rstrip('/')
     
@@ -98,12 +103,17 @@ def main():
     parser.add_argument('--verify-key', type=str, required=True, help='Mirai HTTP API 验证密钥')
     parser.add_argument('--message', type=str, help='要发送的消息')
     parser.add_argument('--bot-qq', type=str, help='机器人自己的QQ号')
+    parser.add_argument('--test', action='store_true', help='测试模式，不实际发送消息')
     args = parser.parse_args()
     
     # 如果没有提供消息，生成一个带随机代码的查寝消息
     if not args.message:
         random_code = random.randint(100, 999)
         args.message = f"查寝提醒：代码{random_code}，若请假请忽略此条消息，谢谢。"
+    
+    # 测试模式
+    if args.test:
+        args.api_url = "TEST"
     
     # 发送消息
     success = send_message(args.target, args.message, args.api_url, args.verify_key)

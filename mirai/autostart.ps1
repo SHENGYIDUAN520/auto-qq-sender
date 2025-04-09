@@ -1,4 +1,4 @@
-$env:JAVA_HOME = 'C:\Program Files\Java\jdk-24'
+$env:JAVA_HOME = 'C:\Program Files\Java\jdk-11.0.25'
 $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
 
 # 启动 Mirai Console
